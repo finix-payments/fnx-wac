@@ -16,7 +16,7 @@ setup(
              .match(open('wac.py').read())
              .group(1)),
     url='https://github.com/finix-payments/fnx-wac',
-    download_url="https://github.com/finix-payments/fnx-wac/archive/0.1.tar.gz",
+    download_url="https://github.com/finix-payments/fnx-wac/archive/0.32.tar.gz",
     license=open('LICENSE').read(),
     author='Finix',
     author_email='dev@finixpayments.com',
@@ -37,7 +37,10 @@ setup(
         'chardet >= 1.0',  # force requests optional
         'simplejson >= 2.1',
         'iso8601',
-        'requests >= 1.2.3'
+        'requests >= 1.2.3',
+        'six >=1.10.0',
+        'future >= 0.16.0'
+
     ],
     test_suite='tests',
     classifiers=[

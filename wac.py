@@ -8,14 +8,18 @@ import math
 import pprint
 import re
 import threading
+from six import with_metaclass
+import future
+from future.standard_library import install_aliases
+install_aliases()
 import http.client
-import hhtplib
 import urllib.request, urllib.parse, urllib.error
 import urllib.parse
 
+
 import requests
 
-__version__ = '0.31'
+__version__ = '0.32'
 
 __all__ = [
     'Config',
@@ -358,7 +362,7 @@ class Error(requests.HTTPError):
     @classmethod
     def format_message(cls, requests_ex):
         data = getattr(requests_ex.response, 'data', {})
-        status = httplib.responses[requests_ex.response.status_code]
+        status = http.client.responses[requests_ex.response.status_code]
         status = data.pop('status', status)
         status_code = data.pop('status_code', requests_ex.response.status_code)
         desc = data.pop('description', None)
@@ -380,7 +384,7 @@ class Redirection(requests.HTTPError):
         super(Redirection, self).__init__(message, response=response)
 
 
-class Client(threading.local, object, metaclass=abc.ABCMeta):
+class Client(with_metaclass(abc.ABCMeta, threading.local, object)):
     """
     Wrapper for all HTTP communication, which is done using requests.
 
@@ -719,10 +723,12 @@ class Pagination(object):
         self._current = self._current.previous
         return self._current
 
-    def __next__(self):
-        if not self.current.__next__:
+
+
+    def next_page(self):
+        if not self.current.next:
             return None
-        self._current = self._current.__next__
+        self._current = self._current.next
         return self._current
 
     def __iter__(self):
@@ -785,6 +791,8 @@ class PaginationMixin(object):
     """
 
     def count(self):
+        import ipdb; ipdb.set_trace()
+        
         if self.pagination.fetched:
             page = self.pagination.current.page
         else:
@@ -1277,7 +1285,7 @@ class _ResourceMeta(type):
         return cls
 
 
-class Resource(_ObjectifyMixin, metaclass=_ResourceMeta):
+class Resource(with_metaclass(_ResourceMeta, _ObjectifyMixin)):
     """
     The core resource class. Any given URI addresses a type of resource and
     this class is the object representation of that resource.

@@ -639,10 +639,10 @@ class TestPagination(TestCase):
         self.assertEqual(pagination.current, page1)
 
         for expected_page in [page2, page3]:
-            page = pagination.next()
+            page = pagination.next_page()
             self.assertEqual(page, expected_page)
             self.assertEqual(pagination.current, expected_page)
-        page = pagination.next()
+        page = pagination.next_page()
         self.assertEqual(page, None)
         self.assertEqual(pagination.current, expected_page)
 
@@ -1010,6 +1010,8 @@ class TestQuery(TestCase):
         uri = '/ur/is'
         q = wac.Query(Resource1, uri, 3)
         expected_items = range(1, 9)
+        import ipdb; ipdb.set_trace()
+        
         for i in xrange(q.count()):
             self.assertEqual(q[i], expected_items[i])
 

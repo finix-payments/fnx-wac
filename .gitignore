@@ -1,0 +1,11 @@
+.pypirc
+.idea/
+wac.egg-info/
+*.pyc
+env/
+dist/
+build/
+finix_wac.egg-info/
+fnx_wac.egg-info/
+.eggs/
+setup.cfg

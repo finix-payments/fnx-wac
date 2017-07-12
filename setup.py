@@ -16,6 +16,7 @@ setup(
              .match(open('wac.py').read())
              .group(1)),
     url='https://github.com/finix-payments/fnx-wac',
+    download_url="https://github.com/finix-payments/fnx-wac/archive/0.1.tar.gz",
     license=open('LICENSE').read(),
     author='Finix',
     author_email='dev@finixpayments.com',
@@ -40,12 +41,6 @@ setup(
     ],
     test_suite='tests',
     classifiers=[
-        'Intended Audience :: Developers',
-        'Development Status :: 4 - Beta',
-        'Natural Language :: English',
-        'Topic :: Software Development :: Libraries :: Python Modules',
-        'License :: OSI Approved :: ISC License (ISCL)',
-        'Programming Language :: Python',
-        'Programming Language :: Python :: 2.7',
+
     ],
 )

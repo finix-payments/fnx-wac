@@ -1131,7 +1131,6 @@ class ResourceCollection(PaginationMixin):
     #     return instance
 
     def create(self, data=None, **kwargs):
-
         resp = self.resource_cls.client.post(self.uri, data=data, **kwargs)
         resource_cls = self.resource_cls
         instance_cls = getattr(resource_cls, "instance_cls", None)

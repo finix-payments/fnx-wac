@@ -1016,7 +1016,6 @@ class TestQuery(TestCase):
 
         for i in xrange(query.count()):
             self.assertEqual(query[i], expected_items[i])
-
     @patch.object(wac.Pagination, '_page')
     def test_slice(self, _page):
         page1 = Mock(items=[1, 2, 3], total=8)

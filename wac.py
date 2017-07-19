@@ -791,8 +791,7 @@ class PaginationMixin(object):
     """
 
     def count(self):
-        import ipdb; ipdb.set_trace()
-        
+        at
         if self.pagination.fetched:
             page = self.pagination.current.page
         else:
@@ -1130,7 +1129,6 @@ class ResourceCollection(PaginationMixin):
     #     return instance
 
     def create(self, data=None, **kwargs):
-        import ipdb; ipdb.set_trace()
         resp = self.resource_cls.client.post(self.uri, data=data, **kwargs)
         resource_cls = self.resource_cls
         instance_cls = getattr(resource_cls, "instance_cls", None)

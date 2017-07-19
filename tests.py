@@ -1010,8 +1010,7 @@ class TestQuery(TestCase):
         uri = '/ur/is'
         q = wac.Query(Resource1, uri, 3)
         expected_items = range(1, 9)
-        import ipdb; ipdb.set_trace()
-        
+
         for i in xrange(q.count()):
             self.assertEqual(q[i], expected_items[i])
 

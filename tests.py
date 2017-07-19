@@ -505,7 +505,7 @@ class TestPage(TestCase):
 
             common_data = {
                 '_type': 'page',
-                '_uris': {
+                '_links': {
                     'first_uri': {
                         '_type': 'page',
                         'key': 'first',
@@ -639,10 +639,10 @@ class TestPagination(TestCase):
         self.assertEqual(pagination.current, page1)
 
         for expected_page in [page2, page3]:
-            page = pagination.next_page()
+            page = pagination.next()
             self.assertEqual(page, expected_page)
             self.assertEqual(pagination.current, expected_page)
-        page = pagination.next_page()
+        page = pagination.next()
         self.assertEqual(page, None)
         self.assertEqual(pagination.current, expected_page)
 
@@ -657,6 +657,7 @@ class TestPagination(TestCase):
     @patch.object(wac.Pagination, '_page')
     @patch('wac.Page')
     def test_count(self, Page, _page):
+
         page1 = Mock(items=[1, 2, 3], total=8)
 
         def _page_patch(key, size=None):
@@ -810,33 +811,33 @@ class TestQuery(TestCase):
 
     def test_filter(self):
         uri = '/a/uri'
-        q = wac.Query(None, uri, 25)
-        q.filter(Resource1.f.a == 'b')
-        self.assertEqual(q.filters[-1], ('a', 'b'))
-        q.filter(Resource1.f.a != '101')
-        self.assertEqual(q.filters[-1], ('a[!=]', '101'))
-        q.filter(Resource1.f.b < 4)
-        self.assertEqual(q.filters[-1], ('b[<]', '4'))
-        q.filter(Resource1.f.b <= 5)
-        self.assertEqual(q.filters[-1], ('b[<=]', '5'))
-        q.filter(Resource1.f.c > 123)
-        self.assertEqual(q.filters[-1], ('c[>]', '123'))
-        q.filter(Resource1.f.c >= 44)
-        self.assertEqual(q.filters[-1], ('c[>=]', '44'))
-        q.filter(Resource1.f.d.in_(1, 2, 3))
-        self.assertEqual(q.filters[-1], ('d[in]', '1,2,3'))
-        q.filter(~Resource1.f.d.in_(6, 33, 55))
-        self.assertEqual(q.filters[-1], ('d[!in]', '6,33,55'))
-        q.filter(Resource1.f.e.contains('it'))
-        self.assertEqual(q.filters[-1], ('e[contains]', 'it'))
-        q.filter(~Resource1.f.e.contains('soda'))
-        self.assertEqual(q.filters[-1], ('e[!contains]', 'soda'))
-        q.filter(Resource1.f.f.startswith('la'))
-        self.assertEqual(q.filters[-1], ('f[startswith]', 'la'))
-        q.filter(Resource1.f.f.endswith('lo'))
-        self.assertEqual(q.filters[-1], ('f[endswith]', 'lo'))
+        gg = wac.Query(None, uri, 25)
+        gg.filter(Resource1.f.a == 'b')
+        self.assertEqual(gg.filters[-1], ('a', 'b'))
+        gg.filter(Resource1.f.a != '101')
+        self.assertEqual(gg.filters[-1], ('a[!=]', '101'))
+        gg.filter(Resource1.f.b < 4)
+        self.assertEqual(gg.filters[-1], ('b[<]', '4'))
+        gg.filter(Resource1.f.b <= 5)
+        self.assertEqual(gg.filters[-1], ('b[<=]', '5'))
+        gg.filter(Resource1.f.c > 123)
+        self.assertEqual(gg.filters[-1], ('c[>]', '123'))
+        gg.filter(Resource1.f.c >= 44)
+        self.assertEqual(gg.filters[-1], ('c[>=]', '44'))
+        gg.filter(Resource1.f.d.in_(1, 2, 3))
+        self.assertEqual(gg.filters[-1], ('d[in]', '1,2,3'))
+        gg.filter(~Resource1.f.d.in_(6, 33, 55))
+        self.assertEqual(gg.filters[-1], ('d[!in]', '6,33,55'))
+        gg.filter(Resource1.f.e.contains('it'))
+        self.assertEqual(gg.filters[-1], ('e[contains]', 'it'))
+        gg.filter(~Resource1.f.e.contains('soda'))
+        self.assertEqual(gg.filters[-1], ('e[!contains]', 'soda'))
+        gg.filter(Resource1.f.f.startswith('la'))
+        self.assertEqual(gg.filters[-1], ('f[startswith]', 'la'))
+        gg.filter(Resource1.f.f.endswith('lo'))
+        self.assertEqual(gg.filters[-1], ('f[endswith]', 'lo'))
         self.assertEqual(
-            urllib.unquote(q._qs()),
+            urllib.unquote(gg._qs()),
             'a=b&a[!=]=101&b[<]=4&b[<=]=5&c[>]=123&c[>=]=44&d[in]=1,2,3&'
             'd[!in]=6,33,55&e[contains]=it&e[!contains]=soda&f[startswith]=la&'
             'f[endswith]=lo')
@@ -983,7 +984,9 @@ class TestQuery(TestCase):
     @patch.object(wac.Pagination, '_page')
     @patch('wac.Page')
     def test_count(self, Page, _page):
+
         page1 = Mock(items=[1, 2, 3], total=8)
+
 
         def _page_patch(key, data=None):
             return [page1][key]
@@ -991,9 +994,9 @@ class TestQuery(TestCase):
         _page.side_effect = _page_patch
 
         uri = '/ur/is'
-        q = wac.Query(Resource1, uri, 3)
+        gg = wac.Query(Resource1, uri, 3)
         expected_count = 8
-        count = q.count()
+        count = gg.count()
         self.assertEqual(expected_count, count)
 
     @patch.object(wac.Pagination, '_page')
@@ -1008,12 +1011,11 @@ class TestQuery(TestCase):
         _page.side_effect = _page_patch
 
         uri = '/ur/is'
-        q = wac.Query(Resource1, uri, 3)
+        query = wac.Query(Resource1, uri, 3)
         expected_items = range(1, 9)
-        import ipdb; ipdb.set_trace()
-        
-        for i in xrange(q.count()):
-            self.assertEqual(q[i], expected_items[i])
+
+        for i in xrange(query.count()):
+            self.assertEqual(query[i], expected_items[i])
 
     @patch.object(wac.Pagination, '_page')
     def test_slice(self, _page):

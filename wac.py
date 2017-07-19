@@ -10,6 +10,7 @@ import re
 import threading
 from six import with_metaclass
 import future
+from past.builtins import basestring
 from future.standard_library import install_aliases
 install_aliases()
 import http.client
@@ -609,6 +610,7 @@ class Page(_ObjectifyMixin):
 
     @property
     def index(self):
+
         return int(self.offset / self.total) if self.total else 0
 
 
@@ -725,7 +727,7 @@ class Pagination(object):
 
 
 
-    def next_page(self):
+    def next(self):
         if not self.current.next:
             return None
         self._current = self._current.next
@@ -735,7 +737,7 @@ class Pagination(object):
         page = self.current
         while True:
             yield page
-            page = page.__next__ if hasattr(page, "next") else None
+            page = page.next if hasattr(page, "next") else None
             if not page:
                 break
             if isinstance(page, str):
@@ -791,12 +793,11 @@ class PaginationMixin(object):
     """
 
     def count(self):
-        import ipdb; ipdb.set_trace()
-        
         if self.pagination.fetched:
             page = self.pagination.current.page
         else:
             page = self.pagination._page(0, 1).page
+
         return page.total if hasattr(page, "total") else page["count"]
 
     def all(self):
@@ -1130,7 +1131,7 @@ class ResourceCollection(PaginationMixin):
     #     return instance
 
     def create(self, data=None, **kwargs):
-        import ipdb; ipdb.set_trace()
+
         resp = self.resource_cls.client.post(self.uri, data=data, **kwargs)
         resource_cls = self.resource_cls
         instance_cls = getattr(resource_cls, "instance_cls", None)
@@ -1197,27 +1198,27 @@ class _ResourceField(object):
         return FilterExpression(self, 'in', args, '!in')
 
     def startswith(self, prefix):
-        if not isinstance(prefix, str):
+        if not isinstance(prefix, basestring):
             raise ValueError('"startswith" prefix  must be a string')
         return FilterExpression(self, 'startswith', prefix, None)
 
     def endswith(self, suffix):
-        if not isinstance(suffix, str):
+        if not isinstance(suffix, basestring):
             raise ValueError('"endswith" suffix  must be a string')
         return FilterExpression(self, 'endswith', suffix, None)
 
     def contains(self, fragment):
-        if not isinstance(fragment, str):
+        if not isinstance(fragment, basestring):
             raise ValueError('"contains" fragment must be a string')
         return FilterExpression(self, 'contains', fragment, '!contains')
 
     def like(self, fragment):
-        if not isinstance(fragment, str):
+        if not isinstance(fragment, basestring):
             raise ValueError('"like" fragment must be a string')
         return FilterExpression(self, 'like', fragment, '!like')
 
     def ilike(self, fragment):
-        if not isinstance(fragment, str):
+        if not isinstance(fragment, basestring):
             raise ValueError('"ilike" fragment must be a string')
         return FilterExpression(self, 'ilike', fragment, '!ilike')
 
@@ -1405,6 +1406,7 @@ class Resource(with_metaclass(_ResourceMeta, _ObjectifyMixin)):
             resp = cls.client.get(kwargs.get("uri"))
             return cls(**resp.data)
         elif "id" in kwargs:
+
             uri = refine_url(cls.type + "/" + kwargs.get("id"))
             return cls.get(uri=uri)
         return cls.query

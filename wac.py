@@ -20,7 +20,7 @@ import urllib.parse
 
 import requests
 
-__version__ = '0.32'
+__version__ = '0.33'
 
 __all__ = [
     'Config',

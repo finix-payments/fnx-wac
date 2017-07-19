@@ -16,7 +16,7 @@ setup(
              .match(open('wac.py').read())
              .group(1)),
     url='https://github.com/finix-payments/fnx-wac',
-    download_url="https://github.com/finix-payments/fnx-wac-test/archive/0.3.tar.gz",
+    download_url="https://github.com/finix-payments/fnx-wac/archive/0.4.tar.gz",
     license=open('LICENSE').read(),
     author='Finix',
     author_email='dev@finixpayments.com',

@@ -10,12 +10,12 @@ else:
 
 
 setup(
-    name='fnx-wac-test',
+    name='fnx-wac',
     version=(re
              .compile(r".*__version__ = '(.*?)'", re.S)
              .match(open('wac.py').read())
              .group(1)),
-    url='https://github.com/finix-payments/fnx-wac-test',
+    url='https://github.com/finix-payments/fnx-wac',
     download_url="https://github.com/finix-payments/fnx-wac-test/archive/0.3.tar.gz",
     license=open('LICENSE').read(),
     author='Finix',

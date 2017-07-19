@@ -505,7 +505,7 @@ class TestPage(TestCase):
 
             common_data = {
                 '_type': 'page',
-                '_links': {
+                '_uris': {
                     'first_uri': {
                         '_type': 'page',
                         'key': 'first',
